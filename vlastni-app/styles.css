@@ -1,7 +1,7 @@
 body {
   background: linear-gradient(to right, #c2e9fb, #dbeafe);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #222;
+  color: #3c3c3c;
   margin: 0;
   padding: 0;
   animation: fadeIn 1s ease-in;
@@ -46,7 +46,7 @@ body {
   background-color: #fdfdfd;
   border-radius: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  padding: 20px;
+  padding: 16px;
   width: 300px;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -63,7 +63,7 @@ body {
   width: 100%;
   height: 450px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 16px;
   transition: transform 0.3s ease;
 }
 
@@ -134,20 +134,23 @@ body {
 
 /* Tlačítka (přihlášení, registrace, odhlášení) */
 button {
-  background-color: #2563eb;
-  color: white;
-  border: none;
+  background-color: #e3f3fa;
+  color: #1d4ed8;
+  border: 1px solid #1d4ed8;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  border-radius: 0.75rem;
+  font-weight: 550;
+  border-radius: 12px;
   margin: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
-  background-color: #1d4ed8;
+button:hover,
+button:active {
+  background-color: #1e40af;
   transform: scale(1.05);
+  color: white;
 }
 
 /* Formuláře */
@@ -187,16 +190,159 @@ input:focus {
 
 .nav-button {
   padding: 0.5rem 1rem;
-  background-color: #1d4ed8;
-  color: white;
-  border: none;
-  border-radius: 8px;
+  background-color: #e3f3fa;
+  color: #1d4ed8;
+  border: 1px solid #1d4ed8;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 550;
   transition: background-color 0.2s ease;
 }
 
 .nav-button:hover,
 .nav-button:active {
   background-color: #1e40af;
+  color: white;
 }
+.profile-box {
+  background: white;
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  text-align: left;
+  font-size: 1.1rem;
+}
+.wishlist-btn {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.wishlist-btn:hover {
+  background-color: #d97706;
+}
+.rating-stars {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.star {
+  font-size: 22px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 2px;
+  transition: color 0.3s, transform 0.2s;
+  user-select: none;
+}
+
+.star:hover {
+  transform: scale(1.2);
+  color: gold;
+}
+
+.star.rated {
+  color: gold;
+}
+.landing-hero {
+  text-align: center;
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #c7d2fe, #fecaca);
+  border-radius: 30px;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 800px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.landing-hero h1 {
+  font-size: 3rem;
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+}
+
+.landing-hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: #374151;
+}
+
+.landing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.landing-buttons button {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.landing-buttons button:hover,
+.landing-buttons button:active {
+  background-color: #1e40af;
+  transform: scale(1.05);
+}
+
+/* === Ukázka filmů === */
+.landing-preview {
+  text-align: center;
+  padding: 1rem;
+  animation: fadeIn 1s ease-in;
+}
+
+.landing-preview h2 {
+  font-size: 2.5rem;
+  color: #1e3a8a;
+  margin-bottom: 3rem;
+}
+
+.preview-gallery {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.preview-gallery .card {
+  width: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.preview-gallery .card:hover,
+.preview-gallery .card:active {
+  transform: scale(1.05);
+}
+
+.preview-gallery img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-gallery h3 {
+  font-size: 1rem;
+  padding: 0.75rem;
+  color: #111827;
+}
+

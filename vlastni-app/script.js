@@ -1,8 +1,14 @@
 import { checkAuth, login, logout, register } from './login.js';
 import array from "./data.js";
+import { showProfile } from "./profile.js";
+import { isInWishlist, toggleWishlist, showWishlist } from "./wishlist.js";
 
-// ======= Pomocná proměnná =======
-let currentMovies = []; // aktivně zobrazené filmy
+// ======= Pomocné proměnné =======
+let currentMovies = [];
+let ratings = JSON.parse(localStorage.getItem("ratings")) || {};
+function saveRatings() {
+  localStorage.setItem("ratings", JSON.stringify(ratings));
+}
 
 // ======= HTML PRVKY =======
 const main = document.createElement("div");
@@ -21,9 +27,18 @@ const logoutBtn = document.createElement("button");
 logoutBtn.textContent = "Odhlásit se";
 logoutBtn.addEventListener("click", async () => {
   await logout();
+  location.reload();
 });
 
-// ======= Filtrování podle názvu =======
+const profileBtn = document.createElement("button");
+profileBtn.textContent = "Můj profil";
+profileBtn.addEventListener("click", showProfile);
+
+const wishlistBtn = document.createElement("button");
+wishlistBtn.textContent = "📃 Můj wishlist";
+wishlistBtn.addEventListener("click", showWishlist);
+
+// ======= Filtrování =======
 filterInput.addEventListener("input", () => {
   const query = filterInput.value.toLowerCase();
   const filtered = currentMovies.filter((movie) =>
@@ -32,7 +47,7 @@ filterInput.addEventListener("input", () => {
   rendersMovies(filtered, main);
 });
 
-// ======= Funkce pro vykreslení filmů =======
+// ======= Vykreslení filmů =======
 function rendersMovies(movies, targetContainer) {
   targetContainer.innerHTML = "";
   movies.forEach((movie) => {
@@ -66,11 +81,46 @@ function rendersMovies(movies, targetContainer) {
         : "Zobrazit více";
     });
 
+    const wishlistToggleBtn = document.createElement("button");
+    wishlistToggleBtn.textContent = isInWishlist(movie.title)
+      ? "Odebrat z wishlistu"
+      : "Přidat do wishlistu";
+    wishlistToggleBtn.classList.add("wishlist-btn");
+
+    wishlistToggleBtn.addEventListener("click", () => {
+      toggleWishlist(movie.title);
+      wishlistToggleBtn.textContent = isInWishlist(movie.title)
+        ? "Odebrat z wishlistu"
+        : "Přidat do wishlistu";
+    });
+
+    // ⭐ Hodnocení hvězdičkami (1–10)
+    const ratingContainer = document.createElement("div");
+    ratingContainer.classList.add("rating-stars");
+    const userRating = ratings[movie.title] || 0;
+
+    for (let i = 1; i <= 10; i++) {
+      const star = document.createElement("span");
+      star.textContent = i <= userRating ? "★" : "☆";
+      star.classList.add("star");
+      if (i <= userRating) star.classList.add("rated");
+
+      star.addEventListener("click", () => {
+        ratings[movie.title] = i;
+        saveRatings();
+        rendersMovies(currentMovies, main);
+      });
+
+      ratingContainer.appendChild(star);
+    }
+
     container.appendChild(img);
     container.appendChild(title);
     container.appendChild(year);
     container.appendChild(desc);
     container.appendChild(toggleBtn);
+    container.appendChild(wishlistToggleBtn);
+    container.appendChild(ratingContainer);
 
     targetContainer.appendChild(container);
   });
@@ -105,10 +155,9 @@ function createSectionNavigation() {
   document.body.insertBefore(nav, main);
 }
 
-// ======= Zobrazit filmy podle sekce =======
+// ======= Filtrace podle sekce =======
 function renderFilteredGallery(sectionKey) {
   const query = filterInput.value.toLowerCase();
-
   currentMovies = sectionKey === "all"
     ? array
     : array.filter(movie => movie.section === sectionKey);
@@ -120,15 +169,24 @@ function renderFilteredGallery(sectionKey) {
   rendersMovies(filtered, main);
 }
 
-// ======= Úvodní stránka (nepřihlášený) =======
+// ======= Landing Page =======
 function showLandingPage() {
+  document.body.innerHTML = "";
+
+  // ======= Hlavní sekce =======
+  const hero = document.createElement("section");
+  hero.classList.add("landing-hero");
+
   const title = document.createElement("h1");
-  title.textContent = "Vítej v Harry Potter Galerii";
+  title.textContent = "🎬 Filmová galerie";
   title.classList.add("landing-title");
 
   const subtitle = document.createElement("p");
-  subtitle.textContent = "Prohlížej si filmy po přihlášení nebo registraci.";
+  subtitle.textContent = "Objev kouzelný svět filmů po přihlášení nebo registraci.";
   subtitle.classList.add("landing-subtitle");
+
+  const buttons = document.createElement("div");
+  buttons.classList.add("landing-buttons");
 
   const loginButton = document.createElement("button");
   loginButton.textContent = "Přihlásit se";
@@ -138,10 +196,39 @@ function showLandingPage() {
   registerButton.textContent = "Registrovat se";
   registerButton.addEventListener("click", showRegisterForm);
 
-  document.body.append(title, subtitle, loginButton, registerButton);
+  buttons.append(loginButton, registerButton);
+  hero.append(title, subtitle, buttons);
+
+  //======= Náhled filmů =======
+  const previewSection = document.createElement("section");
+  previewSection.classList.add("landing-preview");
+
+  const previewTitle = document.createElement("h2");
+  previewTitle.textContent = "📺 Ukázka filmů";
+
+  const previewGallery = document.createElement("div");
+  previewGallery.classList.add("preview-gallery");
+
+  const previewMovies = [...array];
+  shuffleArray(previewMovies);
+  previewMovies.slice(0, 4).forEach(movie => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    const img = document.createElement("img");
+    img.src = movie.image;
+
+    const name = document.createElement("h3");
+    name.textContent = movie.title;
+
+    card.append(img, name);
+    previewGallery.appendChild(card);
+  })
+  previewSection.append(previewTitle,previewGallery);
+  document.body.append(hero, previewSection)
 }
 
-// ======= Přihlašovací formulář =======
+// ======= Přihlášení =======
 function showLoginForm() {
   document.body.innerHTML = "";
   const form = document.createElement("form");
@@ -167,7 +254,7 @@ function showLoginForm() {
   document.body.append(form);
 }
 
-// ======= Registrační formulář =======
+// ======= Registrace =======
 function showRegisterForm() {
   document.body.innerHTML = "";
   const form = document.createElement("form");
@@ -194,17 +281,17 @@ function showRegisterForm() {
   document.body.append(form);
 }
 
-// ======= Po přihlášení: galerie & sekce =======
+// ======= Galerie pro přihlášeného uživatele =======
 function showApp() {
   document.body.innerHTML = "";
-  document.body.prepend(mainTitle, filterInput, logoutBtn);
+  document.body.prepend(mainTitle, filterInput, logoutBtn, profileBtn, wishlistBtn);
   document.body.appendChild(main);
 
   createSectionNavigation();
   renderFilteredGallery("all");
 }
 
-// ======= Zamíchání filmů (Fisher–Yates) =======
+// ======= Zamíchání filmů =======
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -214,8 +301,7 @@ function shuffleArray(arr) {
 
 // ======= Spuštění aplikace =======
 async function init() {
-  shuffleArray(array); // 🎲 zamíchej filmy při každém načtení
-
+  shuffleArray(array);
   const user = await checkAuth();
   if (user) {
     showApp();
