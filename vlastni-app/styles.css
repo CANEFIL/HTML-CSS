@@ -1,0 +1,65 @@
+body {
+    background-color: rgb(202, 223, 223);
+}
+/* Obal pro všechny karty */
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+  }
+  
+/* Jedna karta */
+.card {
+    background-color: #e9e5e5;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    padding: 16px;
+    width: 300px;
+    text-align: center;
+    margin: 0.1rem 0.3rem;
+  }
+  
+/* Obrázek */
+.photo {
+    width: 100%;
+    height: 450px;
+    border-radius: 20px;
+  }
+  
+/* Nadpis */
+.title-text {
+    font-size: 1.9em;
+    margin: 12px 0 6px;
+  }
+  
+/* Rok */
+.year-text {
+    font-weight: bold;
+    color: #666;
+  }
+  
+/* Popis */
+.card p {
+    font-size: 0.99em;
+    color: #333;
+  }
+/* Filtrovací pole */
+.filter {
+    display: block;
+    margin: 4rem auto;
+    padding: 15px 20px;
+    font-size: 1rem;
+    width: 300px;
+    border-radius: 16px;
+    border: 2px solid #838282;
+    background-color: rgb(181, 225, 181);
+    color: rgb(0, 0, 0);
+  }
+/* Hlavní Nadpis stránky */
+.main-title {
+    text-align: center;
+    margin: 4rem auto;
+    font-size: 4rem;
+}
