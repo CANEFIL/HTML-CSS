@@ -1,5 +1,6 @@
 import array from "./data.js";
 import { checkAuth } from "./login.js";
+import { showMovieDetail } from "./detail.js";
 
 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -53,7 +54,6 @@ function saveWishlist() {
       msg.style.textAlign = "center";
       container.appendChild(msg);
     } else {
-      // Použij tvoji funkci z script.js nebo vlož přímo zde
       wishlistMovies.forEach((movie) => {
         const card = document.createElement("div");
         card.classList.add("card");
@@ -78,9 +78,11 @@ function saveWishlist() {
         removeBtn.classList.add("wishlist-btn");
 
         removeBtn.addEventListener("click", () => {
-        toggleWishlist(movie.title);
-        showWishlist();
-});
+          toggleWishlist(movie.title);
+          showWishlist();
+        });
+        img.addEventListener("click",() => showMovieDetail(movie));
+        title.addEventListener("click",() => showMovieDetail(movie));
 
         card.appendChild(img);
         card.appendChild(title);

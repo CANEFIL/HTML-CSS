@@ -2,6 +2,8 @@ import { checkAuth, login, logout, register } from './login.js';
 import array from "./data.js";
 import { showProfile } from "./profile.js";
 import { isInWishlist, toggleWishlist, showWishlist } from "./wishlist.js";
+import { showMovieDetail } from "./detail.js";
+import { fetchPopularMovies } from "./tmdb.js";
 
 // ======= Pomocné proměnné =======
 let currentMovies = [];
@@ -113,6 +115,9 @@ function rendersMovies(movies, targetContainer) {
 
       ratingContainer.appendChild(star);
     }
+
+    img.addEventListener("click",() => showMovieDetail(movie));
+    title.addEventListener("click",() => showMovieDetail(movie));
 
     container.appendChild(img);
     container.appendChild(title);
@@ -282,14 +287,32 @@ function showRegisterForm() {
 }
 
 // ======= Galerie pro přihlášeného uživatele =======
-function showApp() {
+async function showApp() {
   document.body.innerHTML = "";
-  document.body.prepend(mainTitle, filterInput, logoutBtn, profileBtn, wishlistBtn);
+
+  // 🌗 Tlačítko pro režim
+  const themeToggleBtn = document.createElement("button");
+  themeToggleBtn.textContent = "🌓 Režim";
+  themeToggleBtn.classList.add("theme-toggle");
+  themeToggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-theme");
+    const isDark = document.body.classList.contains("dark-theme");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  });
+
+  // 🌍 Získání filmů z TMDb
+  const tmdbMovies = await fetchPopularMovies();
+  array.push(...tmdbMovies);
+
+  // 📌 Přidání prvků na stránku
+  document.body.prepend(themeToggleBtn, mainTitle, filterInput, logoutBtn, profileBtn, wishlistBtn);
   document.body.appendChild(main);
 
+  // 📚 Navigace a výchozí galerie
   createSectionNavigation();
   renderFilteredGallery("all");
 }
+
 
 // ======= Zamíchání filmů =======
 function shuffleArray(arr) {
@@ -310,4 +333,8 @@ async function init() {
   }
 }
 
+// === Aktivuj uložený motiv ===
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-theme");
+}
 init();
