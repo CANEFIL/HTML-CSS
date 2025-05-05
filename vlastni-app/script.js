@@ -26,14 +26,14 @@ filterInput.placeholder = "Hledejte film podle názvu..";
 filterInput.classList.add("filter");
 
 const logoutBtn = document.createElement("button");
-logoutBtn.textContent = "Odhlásit se";
+logoutBtn.textContent = "❌ Odhlásit se";
 logoutBtn.addEventListener("click", async () => {
   await logout();
   location.reload();
 });
 
 const profileBtn = document.createElement("button");
-profileBtn.textContent = "Můj profil";
+profileBtn.textContent = "👤 Můj profil";
 profileBtn.addEventListener("click", showProfile);
 
 const wishlistBtn = document.createElement("button");
@@ -101,7 +101,7 @@ function rendersMovies(movies, targetContainer) {
     ratingContainer.classList.add("rating-stars");
     const userRating = ratings[movie.title] || 0;
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 5; i++) {
       const star = document.createElement("span");
       star.textContent = i <= userRating ? "★" : "☆";
       star.classList.add("star");
@@ -175,7 +175,7 @@ function renderFilteredGallery(sectionKey) {
 }
 
 // ======= Landing Page =======
-function showLandingPage() {
+async function showLandingPage() {
   document.body.innerHTML = "";
 
   // ======= Hlavní sekce =======
@@ -213,8 +213,8 @@ function showLandingPage() {
 
   const previewGallery = document.createElement("div");
   previewGallery.classList.add("preview-gallery");
-
-  const previewMovies = [...array];
+  const tmdbMovies = await fetchPopularMovies();
+  const previewMovies = [...array, ...tmdbMovies];
   shuffleArray(previewMovies);
   previewMovies.slice(0, 4).forEach(movie => {
     const card = document.createElement("div");

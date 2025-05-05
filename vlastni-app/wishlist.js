@@ -36,7 +36,7 @@ function saveWishlist() {
     document.body.innerHTML = "";
   
     const heading = document.createElement("h1");
-    heading.textContent = "🎬 Můj wishlist";
+    heading.textContent = "📃 Můj wishlist";
     heading.classList.add("main-title");
   
     const backBtn = document.createElement("button");
